@@ -1,0 +1,29 @@
+{
+  "name": "event-horizon",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Real-time General Relativity Kerr/Schwarzschild black hole geodesic raytracer & NASA Space Shuttle plunge simulator.",
+  "scripts": {
+    "dev": "vite --host --port 5173",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "katex": "^0.16.21",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.174.0"
+  },
+  "devDependencies": {
+    "@types/katex": "^0.16.7",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.174.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.2",
+    "vitest": "^3.1.1"
+  }
+}
