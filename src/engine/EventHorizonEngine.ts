@@ -1002,6 +1002,12 @@ export class EventHorizonEngine {
     if (this.disposed) return;
     this.rafId = requestAnimationFrame(this.loop);
 
+    // Zero GPU burn when browser tab is hidden or minimized!
+    if (document.hidden) {
+      this.lastFrameMs = nowMs;
+      return;
+    }
+
     const dt = Math.min(0.05, Math.max(0.001, (nowMs - this.lastFrameMs) / 1000));
     this.lastFrameMs = nowMs;
     this.simTime += dt;

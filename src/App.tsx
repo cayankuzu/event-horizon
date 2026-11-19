@@ -56,6 +56,7 @@ export const App: React.FC = () => {
   const engineRef = useRef<EventHorizonEngine | null>(null);
 
   const [snap, setSnap] = useState<EngineSnapshot | null>(null);
+  const [webglError, setWebglError] = useState<string | null>(null);
   const [lang, setLang] = useState<Lang>('tr');
   const [audioOn, setAudioOn] = useState(false);
   const [cinematic, setCinematic] = useState(false);
@@ -68,12 +69,19 @@ export const App: React.FC = () => {
   useEffect(() => {
     const host = canvasHostRef.current;
     if (!host) return;
-    const eng = new EventHorizonEngine(host, (nextSnap) => {
-      setSnap(nextSnap);
-    });
-    engineRef.current = eng;
+    let eng: EventHorizonEngine | null = null;
+    try {
+      eng = new EventHorizonEngine(host, (nextSnap) => {
+        setSnap(nextSnap);
+      });
+      engineRef.current = eng;
+      setWebglError(null);
+    } catch (err) {
+      console.warn('[EventHorizon] WebGL initialization fallback:', err);
+      setWebglError(err instanceof Error ? err.message : 'WebGL context unavailable');
+    }
     return () => {
-      eng.dispose();
+      eng?.dispose();
       engineRef.current = null;
     };
   }, []);
@@ -188,6 +196,14 @@ export const App: React.FC = () => {
 
       {snap && !snap.shuttleLoaded && (
         <div className="boot-pill">{tr(lang, 'loadingShuttle')}</div>
+      )}
+
+      {webglError && (
+        <div className="boot-pill">
+          {lang === 'tr'
+            ? 'WebGL 3B bağlamı başlatılamadı — donanım hızlandırmayı açıp sayfayı yenileyin. Bilimsel Rehber aktif.'
+            : 'WebGL 3D context unavailable — enable hardware acceleration and reload. Science Guide remains active.'}
+        </div>
       )}
 
       {cinematic && (
